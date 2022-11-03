@@ -29,13 +29,23 @@ public class MsArticleController {
      * @param pageParams
      * @return
      */
-
+    // 查询首页文章
     @PostMapping
     public Result listArticle(@RequestBody PageParams pageParams){
         return articleService.listArticle(pageParams);
 
 
     }
+
+    // 查找最热文章
+    @PostMapping("hot")
+    public Result hotArticle(){
+        int limit =3;
+
+        return articleService.findHotArticle(limit);
+    }
+
+
 
 }
 

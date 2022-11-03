@@ -58,6 +58,21 @@ public class MsArticleServiceImpl implements MsArticleService {
         List <ArticleVo> articleVoList = copyList(records,true,true);
         return Result.success(articleVoList);
     }
+
+    @Override
+    public Result findHotArticle(int limit) {
+        /**
+         * 查询最热文章
+         */
+        LambdaQueryWrapper<MsArticle> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.orderByDesc(MsArticle::getViewCounts);
+        queryWrapper.select(MsArticle::getId,MsArticle::getTitle);
+        queryWrapper.last("limit "+limit);
+        List<MsArticle> articles = articleMapper.selectList(queryWrapper);
+
+        return Result.success(copyList(articles,false,false));
+    }
+
     // 文章列表的引用
     private List<ArticleVo> copyList(List<MsArticle> records,boolean isTag,boolean isAuthor) {
         List <ArticleVo> articleVoList = new ArrayList<>();

@@ -7,4 +7,17 @@
         where  id in
                (select  tag_id from ms_article_tag where article_id = #{articleId})
     </select>
+
+    <!--List<?> findHotTagIds(int limit)-->
+    <select id="findHotTagIds" parameterType="int" resultType="java.lang.Long">
+        select tag_id from ms_article_tag group by tag_id ORDER BY count(*) desc limit #{limit}
+    </select>
+    <!--    List<MsTag> findTagsByIds(List<Long> tagIds);-->
+    <select id="findTagsByIds" parameterType="list" resultType="com.hyn.mybatisplus.generator.entity.MsTag">
+        select id,tag_name as tagName from ms_tag
+        where id in
+        <foreach collection="tagIds" item = "tagId" separator="," open="(" close=")">
+        #{tagId}
+        </foreach>
+    </select>
 </mapper>

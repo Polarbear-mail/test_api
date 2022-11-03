@@ -13,6 +13,8 @@ import com.hyn.mybatisplus.generator.entity.params.PageParams;
  */
 
 public interface MsArticleService{
-
+    // 获取首页文章列表
     Result listArticle(PageParams pageParams);
+    //获取最热文章
+    Result findHotArticle(int limit);
 }
