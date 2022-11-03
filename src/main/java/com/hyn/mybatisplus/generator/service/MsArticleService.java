@@ -17,4 +17,8 @@ public interface MsArticleService{
     Result listArticle(PageParams pageParams);
     //获取最热文章
     Result findHotArticle(int limit);
+    // 查找最新文章
+    Result findNewArticle(int limit);
+    // 文章归档
+    Result listArchives();
 }

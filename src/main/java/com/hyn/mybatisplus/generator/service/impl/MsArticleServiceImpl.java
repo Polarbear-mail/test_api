@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hyn.mybatisplus.generator.entity.MsArticle;
 import com.hyn.mybatisplus.generator.entity.Result;
+import com.hyn.mybatisplus.generator.entity.dos.Archives;
 import com.hyn.mybatisplus.generator.entity.params.PageParams;
 import com.hyn.mybatisplus.generator.mapper.MsArticleMapper;
 import com.hyn.mybatisplus.generator.mapper.MsTagMapper;
@@ -73,7 +74,33 @@ public class MsArticleServiceImpl implements MsArticleService {
         return Result.success(copyList(articles,false,false));
     }
 
-    // 文章列表的引用
+    @Override
+    public Result findNewArticle(int limit) {
+        /**
+         * 查找最新文章
+         * 1. 根据createTime进行排序
+         */
+        LambdaQueryWrapper<MsArticle> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.orderByDesc(MsArticle::getCreateDate);
+        queryWrapper.select(MsArticle::getId,MsArticle::getTitle);
+        queryWrapper.last("limit "+limit);
+        List<MsArticle> articles = articleMapper.selectList(queryWrapper);
+        return Result.success(articles);
+    }
+
+    @Override
+    public Result listArchives() {
+        /**
+         * 进行文章的归档
+         * 1. 读取数据库中文章的createDate
+         * 2. 转化为年、月、日
+         */
+        List<Archives> archivesList = articleMapper.listArchives();
+        return Result.success(archivesList);
+    }
+
+
+    // 将转化VO后的结果添加到copyList当中
     private List<ArticleVo> copyList(List<MsArticle> records,boolean isTag,boolean isAuthor) {
         List <ArticleVo> articleVoList = new ArrayList<>();
         for (MsArticle record : records) {
@@ -83,7 +110,7 @@ public class MsArticleServiceImpl implements MsArticleService {
         return articleVoList;
     }
 
-
+    // 用 BeanUtils.copyProperties 将artcle 标签和作者转化为VO
     private ArticleVo copy(MsArticle article, boolean isTag,boolean isAuthor){
         ArticleVo articleVo = new ArticleVo();
         BeanUtils.copyProperties(article,articleVo);

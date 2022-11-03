@@ -24,14 +24,16 @@ public class MsArticleController {
 
     @Autowired
     private MsArticleService articleService;
+
     /**
      * 首页文章列表
+     *
      * @param pageParams
      * @return
      */
     // 查询首页文章
     @PostMapping
-    public Result listArticle(@RequestBody PageParams pageParams){
+    public Result listArticle(@RequestBody PageParams pageParams) {
         return articleService.listArticle(pageParams);
 
 
@@ -39,13 +41,25 @@ public class MsArticleController {
 
     // 查找最热文章
     @PostMapping("hot")
-    public Result hotArticle(){
-        int limit =3;
+    public Result hotArticle() {
+        int limit = 3;
 
         return articleService.findHotArticle(limit);
     }
 
+    // 查找最新文章
+    @PostMapping("new")
+    public Result newArticle() {
+        int limit = 4;
+        return articleService.findNewArticle(limit);
+    }
+
+
+    // 文章归档
+    @PostMapping("listArchives")
+    public Result listArchives() {
+        return articleService.listArchives();
+    }
 
 
 }
-
